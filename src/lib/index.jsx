@@ -7,6 +7,7 @@ const LEFT_ARROW = 37;
 const RIGHT_ARROW = 39;
 const DELETE = 46;
 const SPACEBAR = 32;
+const REG_NUM_ONLY = /^[0-9]*$/;
 
 type Props = {
   numInputs: number,
@@ -139,7 +140,13 @@ class OtpInput extends Component<Props, State> {
   handleOtpChange = (otp: string[]) => {
     const { onChange, isInputNum } = this.props;
     const otpValue = otp.join('');
-    onChange(isInputNum ? Number(otpValue) : otpValue);
+    onChange(
+      isInputNum
+        ? REG_NUM_ONLY.test(otpValue)
+          ? otpValue
+          : Number(otpValue)
+        : otpValue
+    );
   };
 
   // Focus on input by index
@@ -214,7 +221,11 @@ class OtpInput extends Component<Props, State> {
     } else if (e.keyCode === RIGHT_ARROW || e.key === 'ArrowRight') {
       e.preventDefault();
       this.focusNextInput();
-    } else if (e.keyCode === SPACEBAR || e.key === ' ' || e.key === 'Spacebar') {
+    } else if (
+      e.keyCode === SPACEBAR ||
+      e.key === ' ' ||
+      e.key === 'Spacebar'
+    ) {
       e.preventDefault();
     }
   };
